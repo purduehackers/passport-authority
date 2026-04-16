@@ -65,8 +65,9 @@ func fetchData(withToken token: String) async throws -> [Passport] {
     
     let resp = AF.request("https://id.purduehackers.com/api/passport", headers: headers)
     
-    let s =  try await resp.serializingString(automaticallyCancelling: true).response.result.get()
-    if s.contains("OAuth Error") {
+    let r = await resp.serializingString(automaticallyCancelling: true).response
+    let s = try r.result.get()
+    if r.response?.statusCode != 200 {
         throw NetworkError.noApiToken
     }
     return try standardDecoder.decode([Passport].self, from: Data(s.utf8))

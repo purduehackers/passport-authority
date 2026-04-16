@@ -55,7 +55,13 @@ struct SignIn: View {
         defer { isSigningIn = false }
         
         do {
-            let res = try await webAuthSession.authenticate(using: URL(string: "https://id.purduehackers.com/api/authorize?client_id=authority&response_type=code")!, callbackURLScheme:"authority")
+            let res = try await webAuthSession.authenticate(
+                using: URL(
+                    string: "https://id.purduehackers.com/api/authorize?client_id=authority&response_type=code&redirect_uri=authority://callback"
+                )!,
+                callbackURLScheme:"authority",
+                preferredBrowserSession: .shared
+            )
             
             let kv = res.query()!.split(separator: "=")
             if kv[0] == "code" {

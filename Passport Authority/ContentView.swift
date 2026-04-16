@@ -177,13 +177,17 @@ struct PassportListView: View {
                 .navigationTitle("Passports")
                 .toolbar {
                     ToolbarItemGroup {
+                        Menu {
+                            Picker("Activation", selection: $statusOption) {
+                                ForEach(StatusOption.allCases, id: \.self) { option in
+                                    Label(option.rawValue, image: ImageResource(name: option.icon, bundle: Bundle.main)).tag(option)
+                                }
+                            }
+                        } label: {
+                            Image(statusOption.icon == "bolt.xmark" ? "bolt.xmark" : statusOption.icon)
+                        }
                         Button("Sort", image: ImageResource(name: sortOption == .idAscending ? "NumberUp" : "NumberDown", bundle: Bundle.main), action: {
                             sortOption = sortOption == .idAscending ? .idDescending : .idAscending
-                        })
-                        Picker("Activation", image: ImageResource(name: statusOption.icon == "bolt.xmark" ? "bolt.xmark" : statusOption.icon, bundle: Bundle.main), selection: $statusOption, content: {
-                            ForEach(StatusOption.allCases, id: \.self) { option in
-                                Label(option.rawValue, image: ImageResource(name: option.icon, bundle: Bundle.main)).tag(option)
-                            }
                         })
                         Button("Sign Out", systemImage: "rectangle.portrait.and.arrow.right") {
                             showSignOutAlert = true
